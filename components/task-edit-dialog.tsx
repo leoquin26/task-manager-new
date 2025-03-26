@@ -47,7 +47,19 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
       category: task.category,
       priority: task.priority,
     })
-  }, [task, form])
+
+    // Disable body scroll when modal is open
+    if (open) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+
+    // Cleanup function to ensure body scroll is re-enabled
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [task, form, open])
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     const updatedTask: Task = {
@@ -69,7 +81,11 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => onOpenChange(false)}>
+    <div
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-black/50"
+      style={{ margin: 0, padding: 0, top: 0, left: 0, right: 0, bottom: 0 }}
+      onClick={() => onOpenChange(false)}
+    >
       <div
         className="bg-background rounded-lg shadow-lg w-full max-w-md max-h-[90vh] flex flex-col"
         onClick={stopPropagation}
@@ -191,3 +207,4 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
     </div>
   )
 }
+

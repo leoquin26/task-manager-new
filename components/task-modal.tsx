@@ -27,6 +27,17 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
       setDueDate(new Date())
       setCategory(TaskCategory.PERSONAL)
       setPriority(TaskPriority.MEDIUM)
+
+      // Disable body scroll when modal is open
+      document.body.style.overflow = "hidden"
+    } else {
+      // Re-enable body scroll when modal is closed
+      document.body.style.overflow = ""
+    }
+
+    // Cleanup function to ensure body scroll is re-enabled
+    return () => {
+      document.body.style.overflow = ""
     }
   }, [isOpen])
 
@@ -52,7 +63,11 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
+    <div
+      className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-black/50"
+      style={{ margin: 0, padding: 0, top: 0, left: 0, right: 0, bottom: 0 }}
+      onClick={onClose}
+    >
       <div
         className="bg-background rounded-lg shadow-lg w-full max-w-md max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()} // Prevent clicks from closing the modal
