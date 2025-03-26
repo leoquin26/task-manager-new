@@ -5,6 +5,8 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 interface SimpleDatePickerProps {
   date: Date | undefined
@@ -12,60 +14,52 @@ interface SimpleDatePickerProps {
 }
 
 export function SimpleDatePicker({ date, onDateChange }: SimpleDatePickerProps) {
-  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false)
-  const containerRef = React.useRef<HTMLDivElement>(null)
-
-  // Close calendar when clicking outside
-  React.useEffect(() => {
-    if (!isCalendarOpen) return
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsCalendarOpen(false)
-      }
-    }
-
-    // Add event listener with capture to handle the event before it reaches other handlers
-    document.addEventListener("mousedown", handleClickOutside, true)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside, true)
-    }
-  }, [isCalendarOpen])
+  const [open, setOpen] = React.useState(false)
 
   // Handle date selection
   const handleDateSelect = (newDate: Date | undefined) => {
     onDateChange(newDate)
-    setIsCalendarOpen(false)
+    setOpen(false)
+  }
+
+  // Prevent event propagation to parent modal
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+  }
+
+  // Function to disable dates before today
+  const disablePastDates = (date: Date) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return date < today
   }
 
   return (
-    <div ref={containerRef} className="relative w-full">
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full justify-start text-left font-normal"
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          setIsCalendarOpen(!isCalendarOpen)
-        }}
-      >
-        <CalendarIcon className="mr-2 h-4 w-4" />
-        {date ? format(date, "PPP") : <span>Seleccionar fecha</span>}
-      </Button>
-
-      {isCalendarOpen && (
-        <div
-          className="absolute z-50 mt-1 bg-background border rounded-md shadow-md p-2"
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
           onClick={(e) => {
-            // Prevent clicks from propagating to parent elements
+            // Prevent event from bubbling up to parent modal
             e.stopPropagation()
           }}
         >
-          <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus />
-        </div>
-      )}
-    </div>
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "PPP") : <span>Seleccionar fecha</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto p-0"
+        align="start"
+        onClick={(e) => {
+          // Prevent event from bubbling up to parent modal
+          e.stopPropagation()
+        }}
+      >
+        <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus disabled={disablePastDates} />
+      </PopoverContent>
+    </Popover>
   )
 }
 
