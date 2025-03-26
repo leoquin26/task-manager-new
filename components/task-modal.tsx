@@ -74,7 +74,7 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          <h2 className="text-lg font-semibold">Agregar Nueva Tarea</h2>
+          <h2 className="text-lg font-semibold">Add new Task</h2>
           <button type="button" onClick={onClose} className="rounded-full p-1 hover:bg-muted">
             <X className="h-5 w-5" />
           </button>
@@ -86,7 +86,7 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
             {/* Title Field */}
             <div className="space-y-2">
               <label htmlFor="title" className="block text-sm font-medium">
-                Título
+                Title
               </label>
               <input
                 id="title"
@@ -95,21 +95,21 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Título de la tarea"
+                placeholder="Task title"
               />
             </div>
 
             {/* Description Field */}
             <div className="space-y-2">
               <label htmlFor="description" className="block text-sm font-medium">
-                Descripción
+                Description
               </label>
               <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                placeholder="Descripción de la tarea (opcional)"
+                placeholder="Task description (optional)"
               />
             </div>
 
@@ -118,7 +118,7 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
               {/* Due Date Field */}
               <div className="space-y-2">
                 <label htmlFor="dueDate" className="block text-sm font-medium">
-                  Fecha Límite
+                  Date limit
                 </label>
                 <SimpleDatePicker date={dueDate} onDateChange={(date) => date && setDueDate(date)} />
               </div>
@@ -126,7 +126,7 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
               {/* Category Field */}
               <div className="space-y-2">
                 <label htmlFor="category" className="block text-sm font-medium">
-                  Categoría
+                  Category
                 </label>
                 <select
                   id="category"
@@ -145,7 +145,7 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
               {/* Priority Field */}
               <div className="space-y-2 sm:col-span-2">
                 <label htmlFor="priority" className="block text-sm font-medium">
-                  Prioridad
+                  Priority
                 </label>
                 <select
                   id="priority"
@@ -171,14 +171,14 @@ export function TaskModal({ isOpen, onClose, onSave }: TaskModalProps) {
             onClick={onClose}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full sm:w-auto"
           >
-            Cancelar
+            Cancel
           </button>
           <button
             type="submit"
             form="task-form"
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full sm:w-auto"
           >
-            Agregar Tarea
+            Add task
           </button>
         </div>
       </div>

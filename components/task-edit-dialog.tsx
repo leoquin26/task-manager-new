@@ -92,7 +92,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
         onKeyDown={stopPropagation}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          <h2 className="text-lg font-semibold">Editar Tarea</h2>
+          <h2 className="text-lg font-semibold">Edit task</h2>
           <button type="button" onClick={() => onOpenChange(false)} className="rounded-full p-1 hover:bg-muted">
             <X className="h-5 w-5" />
           </button>
@@ -102,13 +102,13 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
           <form id="edit-task-form" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="title" className="block text-sm font-medium">
-                Título
+                Title
               </label>
               <input
                 id="title"
                 {...form.register("title")}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Título de la tarea"
+                placeholder="Task title"
               />
               {form.formState.errors.title && (
                 <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
@@ -117,13 +117,13 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
 
             <div className="space-y-2">
               <label htmlFor="description" className="block text-sm font-medium">
-                Descripción
+                Description
               </label>
               <textarea
                 id="description"
                 {...form.register("description")}
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                placeholder="Descripción de la tarea (opcional)"
+                placeholder="Task description (optional)"
               />
               {form.formState.errors.description && (
                 <p className="text-sm text-destructive">{form.formState.errors.description.message}</p>
@@ -133,7 +133,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label htmlFor="dueDate" className="block text-sm font-medium">
-                  Fecha Límite
+                  Date limit
                 </label>
                 <SimpleDatePicker
                   date={form.watch("dueDate")}
@@ -146,7 +146,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
 
               <div className="space-y-2">
                 <label htmlFor="category" className="block text-sm font-medium">
-                  Categoría
+                  Category
                 </label>
                 <select
                   id="category"
@@ -166,7 +166,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
 
               <div className="space-y-2 sm:col-span-2">
                 <label htmlFor="priority" className="block text-sm font-medium">
-                  Prioridad
+                  Priority
                 </label>
                 <select
                   id="priority"
@@ -193,14 +193,14 @@ export function TaskEditDialog({ task, open, onOpenChange, onSave }: TaskEditDia
             onClick={() => onOpenChange(false)}
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full sm:w-auto"
           >
-            Cancelar
+            Cancel
           </button>
           <button
             type="submit"
             form="edit-task-form"
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full sm:w-auto"
           >
-            Guardar Cambios
+            Save changes
           </button>
         </div>
       </div>
