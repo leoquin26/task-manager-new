@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { TaskList } from "@/components/task-list"
 import { TaskModal } from "./task-modal"
 import { TaskStats } from "@/components/task-stats"
@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button"
 import type { Task } from "@/lib/types"
 import { TaskPriority } from "@/lib/types"
 import { initialTasks } from "@/lib/data"
-import { toast } from "sonner" // Import toast from sonner
+import { toast } from "sonner"
 import { Plus } from "lucide-react"
+
+const STORAGE_KEY = "taskflow-tasks"
 
 const getPriorityValue = (priority: TaskPriority): number => {
   switch (priority) {
@@ -50,12 +52,48 @@ const sortTasksByDateAndPriority = (tasks: Task[]): Task[] => {
 }
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks)
+  // Initialize state with a function to avoid hydration mismatch
+  const [tasks, setTasks] = useState<Task[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("all")
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // Load tasks from localStorage on component mount
+  useEffect(() => {
+    // Only run this on the client side
+    const loadTasks = () => {
+      try {
+        const savedTasks = localStorage.getItem(STORAGE_KEY)
+        if (savedTasks) {
+          setTasks(JSON.parse(savedTasks))
+        } else {
+          setTasks(initialTasks)
+        }
+      } catch (error) {
+        console.error("Error loading tasks from localStorage:", error)
+        setTasks(initialTasks)
+      }
+      setIsLoaded(true)
+    }
+
+    loadTasks()
+  }, [])
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    // Only save if the component has loaded (to avoid saving empty tasks on initial render)
+    if (isLoaded) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+      } catch (error) {
+        console.error("Error saving tasks to localStorage:", error)
+      }
+    }
+  }, [tasks, isLoaded])
 
   const addTask = (task: Task) => {
-    setTasks([...tasks, { ...task, id: Date.now().toString() }])
+    const newTasks = [...tasks, { ...task, id: Date.now().toString() }]
+    setTasks(newTasks)
     toast.message("Task added", {
       description: "Your task has been successfully added.",
       duration: 1500,
@@ -101,8 +139,6 @@ export default function Dashboard() {
       completed: taskToDelete.completed,
       createdAt: taskToDelete.createdAt,
     }
-
-    console.log("Deleting task:", taskCopy)
 
     setTasks(tasks.filter((task) => task.id !== id))
 
@@ -193,6 +229,30 @@ export default function Dashboard() {
     setActiveTab(value)
   }
 
+  // Render a loading state until the client-side code has executed
+  if (!isLoaded) {
+    return (
+      <div className="container mx-auto p-4 space-y-6">
+        <div className="py-6">
+          <div className="h-8 w-48 bg-muted animate-pulse rounded-md mb-2"></div>
+          <div className="h-4 w-64 bg-muted animate-pulse rounded-md"></div>
+        </div>
+        <div className="h-10 w-32 bg-muted animate-pulse rounded-md ml-auto"></div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="h-24 bg-muted animate-pulse rounded-md"></div>
+          <div className="h-24 bg-muted animate-pulse rounded-md"></div>
+          <div className="h-24 bg-muted animate-pulse rounded-md"></div>
+        </div>
+        <div className="h-12 bg-muted animate-pulse rounded-md"></div>
+        <div className="space-y-4">
+          <div className="h-16 bg-muted animate-pulse rounded-md"></div>
+          <div className="h-16 bg-muted animate-pulse rounded-md"></div>
+          <div className="h-16 bg-muted animate-pulse rounded-md"></div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-6">
       <header className="py-6">
@@ -258,3 +318,4 @@ export default function Dashboard() {
     </div>
   )
 }
+
